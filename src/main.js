@@ -4,7 +4,7 @@ console.log('OK')
 
 
 // 导入 vue 
-import Vue from 'vue'
+import Vue from 'vue' 
 
 
 // 按需导入 Header 组件
