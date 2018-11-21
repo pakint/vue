@@ -21,6 +21,9 @@ import VueResource from 'vue-resource'
 // 安装 vue-resource
 Vue.use(VueResource)
 
+// 设置请求数据的根路径
+Vue.http.options.root = 'http://localhost:5000'
+
 
 // 按需导入 Header 组件
 import { Header,Swipe, SwipeItem } from 'mint-ui';
@@ -36,7 +39,12 @@ import './lib/mui/css/mui.min.css'
 import './lib/mui/css/icons-extra.css'
 
 
+// 导入格式化时间的插件
+import moment from 'moment'
 
+Vue.filter('dateFormat',function(dataStr,pattern="YYYY-MM-DD HH:mm:ss"){
+  return moment(dataStr).format(pattern)
+})
 
 // 导入App.vue 组件
 import app from './App.vue'
