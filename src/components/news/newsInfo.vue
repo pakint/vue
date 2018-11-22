@@ -1,7 +1,9 @@
 <template>
-
+    <!-- 新闻详情页大容器 -->
     <div class="newsInfo-container">
+      <!-- 大标题 -->
       <h1 class="title">{{ newList.title }}</h1>
+      <!-- 子标题 -->
       <p class="subTitle">
         <span>发表时间:{{ newList.add_time }}</span>
         <span>点击:{{ newList.click }}次</span>
@@ -9,12 +11,21 @@
 
 
       <hr>
-
+      <!-- 内容 -->
       <div class="content" v-html="newList.content"></div>
+
+      <!-- 评论子组件 -->
+      <comment-box></comment-box>
+
+
     </div>
 </template>
 
 <script>
+
+  // 引入评论子组件
+  
+  import comment from '../subcomponents/comment.vue'
 
   import { Toast } from 'mint-ui'
 
@@ -47,6 +58,9 @@ export default {
       })
     }
 
+  },
+  components:{
+    "comment-box":comment
   }
 }
   
