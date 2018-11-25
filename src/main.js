@@ -69,6 +69,35 @@ Vue.filter('dateFormat',function(dataStr,pattern="YYYY-MM-DD HH:mm:ss"){
   return moment(dataStr).format(pattern)
 })
 
+
+// 导入 vuex包
+import Vuex from 'vuex'
+Vue.use(Vuex)
+
+// 创建一个store 实例 得到一个数据仓储对象
+var store = new Vuex.store({
+  // 可以把 state:{} 想象成是data:{} 是用来保存数据用的 
+  // 如果在组件中 想访问 store 中的数据 只能通过 this.stort.state. *** 来访问
+  state: {
+    
+  },
+  mutations:{
+    // 如果要操作 store 中的 state 值，只能通过mutations提供的方法，才能操作对应的数据
+    // 不推荐直接操作 state中的数据，因为，万一导致了数据的紊乱，不能快速的定位到错误的原因，因为每个组件都有可能有操作数据的方法
+   
+      // 注意：如果组件想要调用mutations中的方法，只能通过 this.store.commit()
+    // 如果 组件，想要修改数据，必须使用mutations提供的方法，需要通过this.store.commit(\'方法的名称\',唯一的一个参数)
+    
+  },
+  getters:{
+    // 注意这里的getters 只负责对外提供数据，不负责修改数据，如果想要修改state中的数据请去找mutations
+    // 经过咱们回顾对比，发现getters中的方法，和组件中的过滤器比较类似，因为过滤器和getters都没有修改原数据，都是把原数据做了一层包装，提供给了调用者，
+    // 其次：getters和computed也比较像，只要state中的数据发生变化了，那么，如果getters正好也引用了这个数据，那么就会立即触发getters的重新求值
+  
+    // 如果store中 state 上的数据，在对外提供的时候，需要做一层包装，那么，推荐使用getters,如果需要使用getters,则用this.store.getters.***
+  }
+})
+
 // 导入App.vue 组件
 import app from './App.vue'
 
@@ -79,5 +108,10 @@ var vm = new Vue({
   render: function(createElement){
     return createElement(app)
   },
-  router
+  router,
+  store
 })
+
+
+
+

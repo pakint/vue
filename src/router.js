@@ -41,3 +41,6 @@ var router = new VueRouter({
 
 // 把路由对象暴露出去
 export default router
+
+
+

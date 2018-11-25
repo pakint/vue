@@ -6,7 +6,7 @@
       @enter="enter"
       @after-enter="afterEnter"
     >
-        <dir class="ball" v-show="ballFlag"></dir>
+        <div class="ball" v-show="ballFlag" ref="ball"></div>
     </transition>
    
     <!-- 商品轮播区域 -->
@@ -27,7 +27,7 @@
             <p class="price">
               市场价：<del>¥{{goodsInfoshangpin.market_price}}</del>&nbsp;&nbsp;销售价：<span>¥{{goodsInfoshangpin.sell_price}}</span>
             </p>
-            <p>购买数量：<numberBox></numberBox></p>
+            <p>购买数量：<numberBox @getCount="getSelectedCount" :max="goodsInfoshangpin.stock_quantity"></numberBox></p>
             <p>
               <mt-button type="primary" size="small">立即购买</mt-button>
               <mt-button type="danger" size="small" @click="ballFlag= !ballFlag">加入购物车</mt-button>
@@ -72,6 +72,7 @@
 
 <script>
 
+
 import swiper from '../subcomponents/swiper.vue'
 import numberBox from '../subcomponents/goodsInfo-numberBox.vue'
 
@@ -82,7 +83,10 @@ export default {
       id:this.$route.params.id,
       lunbotuList:[],
       goodsInfoshangpin:[],
-      ballFlag:false
+      ballFlag:false,
+      selectedCount:1
+      
+
     }
   },
   created(){
@@ -120,14 +124,39 @@ export default {
     },
     enter(el,done){
       el.offsetWidth;
-      el.style.transform="translate(90px,431px)";
-      el.style.transition = "all 1s cubic-bezier(0,0,.58,1)";
+
+      // 获取小球的位置 
+
+      // 获取小球的初始位置
+
+      const ballFirstPosition = this.$refs.ball.getBoundingClientRect()
+      console.log(ballFirstPosition)
+
+      // 获取购物车的位置 
+      const badgePosition = document.getElementById('badge').getBoundingClientRect()
+
+      // 获取 横纵坐标的差值
+
+      const distX = badgePosition.left - ballFirstPosition.left
+      const distY = badgePosition.top - ballFirstPosition.top
+
+
+
+
+
+      el.style.transform=`translate(${distX}px,${distY}px)`;
+      el.style.transition = "all 0.5s cubic-bezier(0,0,.58,1)";
       done()
     },
     afterEnter(el){
       this.ballFlag = !this.ballFlag;
-    }
+    },
+    getSelectedCount(count){
+      this.selectedCount = count;
 
+      console.log('子组件向父组件传递过来的值为:'+this.selectedCount);
+      
+    }
   },
   components:{
     swiper,
