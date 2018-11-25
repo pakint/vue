@@ -15,7 +15,7 @@
       <div class="content" v-html="newList.content"></div>
 
       <!-- 评论子组件 -->
-      <comment-box></comment-box>
+      <comment-box :id="this.id"></comment-box>
 
 
     </div>
@@ -37,7 +37,8 @@ export default {
     return {
       // 将URL地址栏中传递过来的id值挂载到data上 方面以后调用
       id:this.$route.params.id,
-      newList:[]
+      newList:{}
+    
     }
   },
   created(){
@@ -47,10 +48,11 @@ export default {
     getNewsList(){
       // 因为我们设置了root根路径 这里获取地址API 写入的地址里不要加/
       this.$http.get('api/getnew/' + this.id).then(result=>{
-        console.log(result.body.message)
+        // console.log(result.body.message)
         if(result.body.status===0){
           // 成功
-          this.newList = result.body.message;
+          this.newList = result.body.message[0];
+          // console.log(this.newList)
         }else {
           // 失败
           Toast('获取新闻内容失败')
@@ -81,7 +83,7 @@ export default {
         display: flex;
         justify-content: space-between;
       }
-      .content{}
+      
     }
 
 </style>

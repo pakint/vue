@@ -5,7 +5,7 @@
 
       <ul class="mui-table-view">
 				<li class="mui-table-view-cell mui-media" v-for="item in newsList" :key="item.id">
-					<router-link v-bind:to="'/home/newsInfo/id=' + item.id">
+					<router-link v-bind:to="'/home/newsInfo/' + item.id">
 						<img class="mui-media-object mui-pull-left" :src="item.img_url">
 						<div class="mui-media-body">
 							<h1>{{ item.title }}</h1>
@@ -19,7 +19,7 @@
 				</li>
 
         <!-- 以下是静态假数据 作为测试 -->
-				<li class="mui-table-view-cell mui-media">
+				<!-- <li class="mui-table-view-cell mui-media">
 					<a href="javascript:;">
 						<img class="mui-media-object mui-pull-left" src="https://avatars3.githubusercontent.com/u/40422470?s=40&v=4">
 						<div class="mui-media-body">
@@ -210,7 +210,7 @@
               </p>
 						</div>
 					</a>
-				</li>
+				</li> -->
         
 
 			</ul>

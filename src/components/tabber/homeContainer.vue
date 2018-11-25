@@ -2,12 +2,8 @@
   <div>
 
     <!-- 引入进来需要手动给他设置一个高度 -->
-    <mt-swipe :auto="4000">
-      <mt-swipe-item v-for="item in lunbotuList" :key="item.img">
-          <img v-bind:src="item.img" alt="">
-      </mt-swipe-item>
-      
-    </mt-swipe>
+    
+    <swiper :lunbotuList="lunbotuList" isfull="true"></swiper>
 
     
     <!-- mui 的 grid-default组件 九宫格 改造成项目需求的 六宫格 工程 -->
@@ -16,12 +12,12 @@
 		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4"><router-link to="/home/newsList">
 		                    <img src="../../images/menu1(1).png" alt="">
 		                    <div class="mui-media-body">新闻资讯</div></router-link></li>
-		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4"><a href="#">
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4"><router-link to="/home/photoList">
 		                    <img src="../../images/menu2.png" alt="">
-		                    <div class="mui-media-body">图片分享</div></a></li>
-		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4"><a href="#">
+		                    <div class="mui-media-body">图片分享</div></router-link></li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4"><router-link to="/home/goodsList">
 		                    <img src="../../images/menu3.png" alt="">
-		                    <div class="mui-media-body">商品购买</div></a></li>
+		                    <div class="mui-media-body">商品购买</div></router-link></li>
 		            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4"><a href="#">
 		                    <img src="../../images/menu4.png" alt="">
 		                    <div class="mui-media-body">留言反馈</div></a></li>
@@ -42,6 +38,8 @@
 
   // 导入 Toast 组件
   import { Toast } from 'mint-ui'
+  
+  import swiper from '../subcomponents/swiper.vue'
 
   export default {
     data(){
@@ -59,7 +57,12 @@
         this.$http.get("api/getlunbo").then(result=>{
           // console.log(result.body);
           if(result.body.status === 0){
+
             
+            result.body.message.forEach(item=>{
+              item.img = item.src;
+
+            })
             // 成功的
             this.lunbotuList = result.body.message;
             Toast("加载轮播图成功...");
@@ -69,46 +72,16 @@
           }
         })
       }
+    },
+    components:{
+      swiper
     }
   }
   
 </script>
 
 <style lang="less" scoped>
-.mint-swipe {
-  height: 200px;
 
-  // 第一种交际选择器写法
-  // .mint-swipe-item:nth-child(1){
-  //   background-color: red;
-  // }
-  //   .mint-swipe-item:nth-child(2){
-  //   background-color: yellow;
-  // }
-  //   .mint-swipe-item:nth-child(3){
-  //   background-color: blue;
-  // }
-
-  // 第二种交际选择器写法
-  .mint-swipe-item {
-    &:nth-child(1){
-      background-color: red;
-    }
-    &:nth-child(2){
-      background-color: cyan;
-    }
-    &:nth-child(3){
-      background-color: yellowgreen;
-    }
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-  }
-
-   
-}
 
 
 .mui-grid-view.mui-grid-9{
