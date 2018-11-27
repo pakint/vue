@@ -2,7 +2,11 @@
   <div class="app-container">
 
     <!-- 顶部 Header区域 -->
-    <mt-header fixed title="秋名山车神-项目"></mt-header>
+    <mt-header fixed title="秋名山车神-项目">
+			<span slot="left" @click="goBack" v-show="flag">
+				<mt-button icon="back">返回</mt-button>
+			</span>
+		</mt-header>
 
     <!-- 中间的 路由 router-view 区域 -->
 
@@ -21,7 +25,7 @@
 				<span class="mui-tab-label">会员</span>
 			</router-link>
 			<router-link class="mui-tab-item-llb" to="/shopcar">
-				<span class="mui-icon mui-icon-extra mui-icon-extra-cart"><span class="mui-badge" id="badge">0</span></span>
+				<span class="mui-icon mui-icon-extra mui-icon-extra-cart"><span class="mui-badge" id="badge">{{ $store.getters.getCount }}</span></span>
 				<span class="mui-tab-label">购物车</span>
 			</router-link>
 			<router-link class="mui-tab-item-llb" to="search">
@@ -35,6 +39,32 @@
 </template>
 
 <script>
+	export default {
+		data(){
+			return {
+				flag:false
+			}
+		},
+		created(){
+			this.flag = this.$route.path=== '/home' ? false:true;
+		},
+		methods:{
+			goBack(){
+				// 点击返回实现后退  路由历史操作 $router.go(-1)
+				this.$router.go(-1);
+			}
+		},
+
+		watch:{
+			'$route.path':function(newVal){
+				if(newVal == '/home'){
+					this.flag = false;
+				}else {
+					this.flag = true;
+				}
+			}
+		}
+	}
 
 
 </script>

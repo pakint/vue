@@ -74,11 +74,19 @@ Vue.filter('dateFormat',function(dataStr,pattern="YYYY-MM-DD HH:mm:ss"){
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
+// 每一次刚进来页面的时候 肯定会先进入main.js 在刚调用的时候，先从本地存储中，把购物车的数据读出来，放到 store中 这样就能实现 购物车数据本地持久化存储了
+
+var car = JSON.parse(localStorage.getItem('car')||'[]');
+
 // 创建一个store 实例 得到一个数据仓储对象
-var store = new Vuex.store({
+var store = new Vuex.Store({
   // 可以把 state:{} 想象成是data:{} 是用来保存数据用的 
   // 如果在组件中 想访问 store 中的数据 只能通过 this.stort.state. *** 来访问
   state: {
+    // 将购物车中的商品数据，用一个数组存储起来 在car数组中，存储一些商品的对象，咱们可以暂时将这个商品的对象设计成这个样子
+    // {id:商品的id,count:要购买的数量,price:商品的单价,selected:true}
+    // selected:true\\falst 商品的开关 商品在购物车中是否被选中
+    car:car
     
   },
   mutations:{
@@ -87,7 +95,69 @@ var store = new Vuex.store({
    
       // 注意：如果组件想要调用mutations中的方法，只能通过 this.store.commit()
     // 如果 组件，想要修改数据，必须使用mutations提供的方法，需要通过this.store.commit(\'方法的名称\',唯一的一个参数)
-    
+
+
+    addToCar(state,goodsInfoshangpinId){
+      // 假设在购物车中没有找到对应的商品
+      var flag = false;
+
+      state.car.some(item=>{
+        if(item.id==goodsInfoshangpinId.id){
+          item.count += parseInt(goodsInfoshangpinId.count);
+          flag = true;
+          return true;
+        }
+      })
+
+      // 如果最终，循环完毕 得到的flag 还是 false  则把商品数据直接push到购物车中去
+      if(!flag){
+        state.car.push(goodsInfoshangpinId);
+      }
+
+      // 当更新car 后 把car数组 序列化为字符串 存储到本地 localStorage 中去
+      localStorage.setItem('car',JSON.stringify(state.car));
+
+
+    },
+    updateGoodsInfo(state,goodsInfoshangpinId){
+      // 修改购物车中商品的数量值
+      console.log(goodsInfoshangpinId);
+
+      
+      state.car.some(item=>{
+        if(item.id == goodsInfoshangpinId.id){
+          item.count = parseInt(goodsInfoshangpinId.count)
+
+          return true;
+        }
+      })
+
+      // 当循环完毕之后 就把最新的数据 保存到localStoraeg 本地存储 上去
+      localStorage.setItem('car',JSON.stringify(state.car));
+    },
+
+    deleItemIdInfo(state,id){
+      state.car.some((item,i)=>{
+        if(item.id == id){
+          state.car.splice(i,1)
+          return true;
+        }
+      })
+
+      // 当循环完毕之后 就把最新的数据 保存到localStoraeg 本地存储 上去
+      localStorage.setItem('car',JSON.stringify(state.car));
+    },
+    upDataGoodsSelected(state,info){
+      state.car.some(item=>{
+        if(item.id==info.id){
+          item.selected = info.selected;
+        }
+      })
+       // 当循环完毕之后 就把最新的数据 保存到localStoraeg 本地存储 上去
+       localStorage.setItem('car',JSON.stringify(state.car));
+    }
+
+
   },
   getters:{
     // 注意这里的getters 只负责对外提供数据，不负责修改数据，如果想要修改state中的数据请去找mutations
@@ -95,6 +165,49 @@ var store = new Vuex.store({
     // 其次：getters和computed也比较像，只要state中的数据发生变化了，那么，如果getters正好也引用了这个数据，那么就会立即触发getters的重新求值
   
     // 如果store中 state 上的数据，在对外提供的时候，需要做一层包装，那么，推荐使用getters,如果需要使用getters,则用this.store.getters.***
+
+    getCount(state){
+      var c = 0;
+      console.log(state.car)
+      state.car.forEach(item=>{
+        c += item.count;
+      })
+
+      return c;
+    },
+    getGoodsCount(state){
+      var o = {};
+      state.car.forEach(item=>{
+        o[item.id]=item.count
+      })
+
+      return o;
+    },
+    getGoodsSelected(state){
+      var o = {};
+      state.car.forEach(item=>{
+      o[item.id] = item.selected;
+      })
+      return o
+    },
+    getGoodsCountAndaMount(state){
+
+      var o = {
+        count : 0,
+        amount : 0
+      }
+
+      state.car.forEach(item=>{
+        if(item.selected){
+          o.count += item.count;
+          o.amount += item.price * item.count;
+        }
+      })
+
+      return o;
+    }
+  
+  
   }
 })
 
@@ -108,10 +221,11 @@ var vm = new Vue({
   render: function(createElement){
     return createElement(app)
   },
+  // 挂载路由对象到vm实例上
   router,
-  store
+  // 挂载store状态管理对象到vm实例上
+  store:store
 })
-
 
 
 

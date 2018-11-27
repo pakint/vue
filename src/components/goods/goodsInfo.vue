@@ -30,7 +30,7 @@
             <p>购买数量：<numberBox @getCount="getSelectedCount" :max="goodsInfoshangpin.stock_quantity"></numberBox></p>
             <p>
               <mt-button type="primary" size="small">立即购买</mt-button>
-              <mt-button type="danger" size="small" @click="ballFlag= !ballFlag">加入购物车</mt-button>
+              <mt-button type="danger" size="small" @click="addToshopCar">加入购物车</mt-button>
             </p>
 					</div>
 				</div>
@@ -145,7 +145,7 @@ export default {
 
 
       el.style.transform=`translate(${distX}px,${distY}px)`;
-      el.style.transition = "all 0.5s cubic-bezier(0,0,.58,1)";
+      el.style.transition = "all 0.2s cubic-bezier(0,0,.58,1)";
       done()
     },
     afterEnter(el){
@@ -155,6 +155,18 @@ export default {
       this.selectedCount = count;
 
       console.log('子组件向父组件传递过来的值为:'+this.selectedCount);
+      
+    },
+    addToshopCar(){
+      this.ballFlag = !this.ballFlag;
+       // {id:商品的id,count:要购买的数量,price:商品的单价,selected:true}
+       // selected:true\\falst 商品的开关 商品在购物车中是否被选中
+
+      // 拼接出一个要保存到 store 中 car 数组里的商品信息对象
+      var goodsinfo = {id:this.id,count:this.selectedCount,price:this.goodsInfoshangpin.sell_price,selected:true};
+
+      // 调用 store 中的 mutations 来将商品加入购物车中
+      this.$store.commit('addToCar', goodsinfo);
       
     }
   },
